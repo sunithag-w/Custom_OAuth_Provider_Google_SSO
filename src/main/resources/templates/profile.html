@@ -1,0 +1,77 @@
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+      <div class="d-flex justify-content-center align-items-center min-vh-100">
+
+    <div class="card shadow-lg p-5" style="width:600px;">
+    <div class="text-center">
+        <img th:src="${user.picture}"
+             class="rounded-circle border border-3 mb-3"
+             width="130"
+             height="130"
+              referrerpolicy="no-referrer"
+             alt="Profile Picture">
+             
+             
+        <h3 th:text="${user.name}"></h3>
+        <p class="text-muted"
+           th:text="${user.email}">
+        </p>
+    </div>
+    <hr>
+    <table class="table table-borderless">
+        <tr>
+            <th>Phone Number</th>
+            <td th:text="${user.phoneNumber}"></td>
+        </tr>
+        <tr>
+            <th>Department</th>
+            <td th:text="${user.department}"></td>
+        </tr>
+        <tr>
+            <th>Designation</th>
+            <td th:text="${user.designation}"></td>
+        </tr>
+       <tr>
+    <th>Task List</th>
+    <td>
+        <div class="dropend task-dropdown">
+
+            <button class="btn btn-light dropdown-toggle"
+                    type="button"> Select Task </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" href="#">
+                        Election Analysis
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        Google OAuth2 SSO
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>
+<style>
+    .task-dropdown:hover .dropdown-menu {
+        display: block;
+    }
+</style>
+
+    </table>
+
+    <div class="d-grid">
+
+        <a th:href="@{/logout}"
+           class="btn btn-primary">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
