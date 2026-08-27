@@ -1,0 +1,137 @@
+                    YOUR APPLICATION                                      GOOGLE
+                   ─────────────────                                  ──────
+
+User opens /
+      │
+      ▼
+┌──────────────────┐
+│ HomeController       │
+│     /                │
+└────────┬─────────┘
+         │
+         │ User clicks "Login with Google"
+         ▼
+┌─────────────────────────────────┐
+│ /customOAuth2/authorization/            │
+│              google                     │
+└───────────────┬─────────────────┘
+                │
+                ▼
+┌─────────────────────────────────┐
+│ CustomOAuth2AuthorizationFilter         │
+│                                         │
+│ - reads provider = google               │
+│ - gets clientId                         │
+│ - gets clientSecret                     │
+│ - gets redirectUri                      │
+│ - gets scopes                           │
+└───────────────┬─────────────────┘
+                │
+                │ Build Google Authorization URL
+                │
+                ▼
+        ──────────────────────────────────────────────►
+                                             ┌────────────────────┐
+                                             │ Google Authorization    │
+                                             │ Server                  │
+                                             └─────────┬──────────┘
+                                                       │
+                                                       │ Login
+                                                       │ + consent
+                                                       ▼
+                                             ┌────────────────────┐
+                                             │ Google authenticates    │
+                                             │ the user                │
+                                             └─────────┬──────────┘
+                                                       │
+                                                       │ authorization_code
+                                                       ▼
+        ◄──────────────────────────────────────────────
+                redirect_uri?code=XXXX&state=YYYY
+                │
+                ▼
+┌─────────────────────────────────┐
+│                 │
+│                                         │
+│ GET /login/oauth2/code/google           │
+└───────────────┬─────────────────┘
+                │
+                │ sends code
+                ▼
+┌─────────────────────────────────┐
+│ OAuth2CallbackController
+   Token api                       │
+│                                 │
+│ POST Google Token Endpoint       │
+│                                 │
+│ client_id                       │
+│ client_secret                   │
+│ code                            │
+│ redirect_uri                    │
+│ grant_type=authorization_code   │
+└───────────────┬─────────────────┘
+                │
+                │ HTTPS POST
+                ▼
+        ──────────────────────────────────────────────►
+                                             ┌────────────────────┐
+                                             │ Google Token            │
+                                             │ Endpoint                │
+                                             └─────────┬──────────┘
+                                                       │
+                                                       │ validates:
+                                                       │ code
+                                                       │ client
+                                                       │ redirect URI
+                                                       ▼
+        ◄──────────────────────────────────────────────
+             access_token
+             
+             id_token
+                │
+                ▼
+┌─────────────────────────────────┐
+│ GoogleUserService                       │
+│                                         │
+│ Uses access_token                       │
+│ to call Google's UserInfo API           │
+└───────────────┬─────────────────┘
+                │
+                │ GET UserInfo
+                │ Authorization: Bearer token
+                ▼
+        ──────────────────────────────────────────────►
+                                             ┌────────────────────┐
+                                             │ Google UserInfo         │
+                                             │ API                     │
+                                             └─────────┬──────────┘
+                                                       │
+                                                       │ user data
+                                                       ▼
+        ◄──────────────────────────────────────────────
+             sub / id
+             email
+             name
+             picture
+                │
+                ▼
+┌─────────────────────────────────┐
+│ Your Application                        │
+│                                         │
+│ Create user/session                     │
+│                                         │
+│ session.setAttribute(...)               │
+└───────────────┬─────────────────┘
+                │
+                ▼
+        redirect:/profile
+                │
+                ▼
+┌─────────────────────────────────┐
+│ ProfileController                       │
+│                                         │
+│ GET /profile                            │
+└───────────────┬─────────────────┘
+                │
+                ▼
+          profile.html
