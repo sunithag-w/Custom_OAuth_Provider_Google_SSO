@@ -1,6 +1,8 @@
 Custom Google OAuth Login SSO Flow Diagram
 [📄 View Complete OAuth2 Flow](./complete%20flow%20custom%20oauth.txt)
 
+![Custom Google Login Flow](custom_oauthflow.png)
+
 This project demonstrates a custom implementation of **Google OAuth 2.0 Login (SSO)** using Spring Boot without relying on Spring Security's built-in OAuth2 login flow.
 
 ![Custom Google OAuth Login Flow](oauthflow.jpeg)
